@@ -17,3 +17,5 @@ The master branch is tested on the LinkPi Encx8 board. The Encx8 uses the Hi3531
 The 3531D_ENC5 branch is tested on the LinkPi Encx5 board. The Encx5 uses the Hi3531D chipset.  
 
 Mirror project: https://github.com/GZ-LinkPi/Hisilicon-Encoder.  
+
+Contact: weilATlinkpi.cn NOTE: AT-->@
