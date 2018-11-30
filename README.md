@@ -13,7 +13,7 @@ master分支在LinkPi的Encx8板卡上测试通过，Encx8使用Hi3531A芯片；
 **Encoder** is based on **LinkSDK**, which requires QT support and is compiled in QT environment.  
 LinkSDK runtime library: https://github.com/GZ-LinkPi/LinkLib.  
 
-The master branch passes the LinkPi Encx8 board and the Encx8 uses the Hi3531A chip.  
-The 3531D_ENC5 branch is tested on the LinkPi Encx5 board, and the Encx5 uses the Hi3531D chip.  
+The master branch is tested on the LinkPi Encx8 board. The Encx8 uses the Hi3531A chipset.  
+The 3531D_ENC5 branch is tested on the LinkPi Encx5 board. The Encx5 uses the Hi3531D chipset.  
 
 Mirror project: https://github.com/GZ-LinkPi/Hisilicon-Encoder.  
