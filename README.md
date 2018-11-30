@@ -6,7 +6,7 @@ LinkSDK的运行库参见：https://github.com/GZ-LinkPi/LinkLib。
 master分支在LinkPi的Enc8板卡上测试通过，Encx8使用Hi3531A芯片；     
 3531D_ENC5分支在LinkPi的Enc5板卡上测试通过，Encx5使用Hi3531D芯片。   
 
-镜像工程: https://github.com/GZ-LinkPi/Hisilicon-Encoder。  
+镜像工程: https://gitee.com/LinkPi/Encoder。  
 
 ---
 
@@ -16,6 +16,6 @@ LinkSDK runtime library: https://github.com/GZ-LinkPi/LinkLib.
 The master branch is tested on the LinkPi Encx8 board. The Encx8 uses the Hi3531A chipset.  
 The 3531D_ENC5 branch is tested on the LinkPi Encx5 board. The Encx5 uses the Hi3531D chipset.  
 
-Mirror project: https://github.com/GZ-LinkPi/Hisilicon-Encoder.  
+Mirror project: https://gitee.com/LinkPi/Encoder.  
 
 Contact: weilATlinkpi.cn NOTE: AT-->@
