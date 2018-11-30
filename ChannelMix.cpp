@@ -13,6 +13,8 @@ void ChannelMix::init()
 {
     audio->linkA(encA);
     overlay->linkV(encV);
+    output=Link::create("OutputVo");
+    video->linkV(output);
     Channel::init();
 }
 
@@ -72,12 +74,16 @@ void ChannelMix::updateConfig(QVariantMap cfg)
     {
         encA->start(cfg["enca"].toMap());
         encV->start(cfg["encv"].toMap());
+        output->start(cfg["output"].toMap());
     }
     else
     {
         encA->stop();
         encV->stop();
     }
+
+
+
     Channel::updateConfig(cfg);
 }
 

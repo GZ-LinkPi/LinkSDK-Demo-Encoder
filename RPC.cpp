@@ -37,7 +37,6 @@ void RPC::init()
     rpcServer->addMethod("group.createEPG", group, "createEPG");
     rpcServer->addMethod("group.syncEPG", group, "callSyncEPG");
 
-
     device=Link::create("Device");
     device->start();
 }
@@ -96,8 +95,7 @@ QVariantMap RPC::getSysState()
     int cpu=0;
     if(total-last_total!=0 && last_total!=0)
         cpu=100-(idel-last_idel)*100/(total-last_total);
-//    if(cpu>90)
-//        cpu=88+rand()/(RAND_MAX/5);
+
     last_total=total;
     last_idel=idel;
 
@@ -116,7 +114,7 @@ QVariantMap RPC::getSysState()
     rx.indexIn(str3);
     long mem3=rx.cap(1).toLong();
 
-    int mem=100-(mem2+mem3)*100/mem1;
+    int mem=100-(mem3)*100/mem1;
     if(mem>80)
         mem=78+rand()/(RAND_MAX/5);
 
@@ -126,6 +124,7 @@ QVariantMap RPC::getSysState()
     rt["cpu"]=cpu;
     rt["mem"]=mem;
     rt["temperature"]=device->invoke("getTemperature").toInt();
+//    qDebug()<<rt["temperature"].toInt();
     return rt;
 }
 

@@ -12,6 +12,7 @@ public:
     virtual void updateConfig(QVariantMap cfg);
 private:
     QList<int> curAList;
+    LinkObject *output;
 signals:
 
 public slots:

@@ -1,6 +1,8 @@
 #include "ChannelVI.h"
 #include <math.h>
 #include <QFile>
+LinkObject *ChannelVI::audioMini=NULL;
+LinkObject *ChannelVI::audioMiniOut=NULL;
 
 ChannelVI::ChannelVI(QObject *parent) :
     Channel(parent)
@@ -9,6 +11,21 @@ ChannelVI::ChannelVI(QObject *parent) :
     video=Link::create("InputVi");
     encA=Link::create("EncodeA");
     encV=Link::create("EncodeV");
+    isSrcLine=false;
+    if(audioMini==NULL)
+    {
+        audioMini=Link::create("InputAi");
+        QVariantMap data;
+        data["interface"]="Mini-In";
+        audioMini->start(data);
+
+        audioMiniOut=Link::create("OutputAo");
+        data["interface"]="Mini-Out";
+        audioMiniOut->start(data);
+
+        audioMini->linkA(audioMiniOut);
+
+    }
 }
 
 void ChannelVI::init()
@@ -53,7 +70,23 @@ void ChannelVI::updateConfig(QVariantMap cfg)
         video->start(vd);
 
         encA->start(cfg["enca"].toMap());
-        encV->start(cfg["encv"].toMap());
+        QVariantMap encD=cfg["encv"].toMap();        
+        encV->start(encD);
+
+
+        QVariantMap cfga=cfg["enca"].toMap();
+        if(cfga.contains("audioSrc") && cfga["audioSrc"].toString()=="line" && !isSrcLine)
+        {
+            audio->unLinkA(encA);
+            audioMini->linkA(encA);
+            isSrcLine=true;
+        }
+        else if(cfga.contains("audioSrc") && cfga["audioSrc"].toString()=="hdmi" && isSrcLine)
+        {
+            isSrcLine=false;
+            audioMini->unLinkA(encA);
+            audio->linkA(encA);
+        }
     }
     else
     {

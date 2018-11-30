@@ -25,6 +25,30 @@ void Config::loadConfig(QString path)
         list=Json::loadFile(path).toList();
     }
 
+    for(int i=0;i<chns.count();i++)
+    {
+        bool bContains;
+        bContains=false;
+        for(int k=0;k<list.count();k++)
+        {
+            if(chns[i]->id==list[k].toMap()["id"].toInt())
+            {
+                bContains=true;
+                break;
+            }
+        }
+        if(!bContains)
+        {
+            Channel *chn=chns[i];
+            QVariantMap data=chn->data;
+            if(data["enable"].toBool())
+            {
+                data["enable"]=false;
+                chn->updateConfig(data);
+            }
+        }
+    }
+
     for(int i=0;i<list.count();i++)
     {
         QVariantMap cfg=list[i].toMap();

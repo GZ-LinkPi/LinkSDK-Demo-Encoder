@@ -1,5 +1,6 @@
 #include "Channel.h"
 #include "unistd.h"
+#include "Json.h"
 
 LinkObject* Channel::httpServer=NULL;
 LinkObject* Channel::rtspServer=NULL;
@@ -53,6 +54,14 @@ void Channel::init()
     path["path"]="rtmp://127.0.0.1/live/stream" + QString::number(id);
     muxMap["rtmp"]->setData(path);
 
+    muxMap["push"]=Link::create("Mux");
+    if(encA==NULL)
+    {
+        path["path"]="rtmp://127.0.0.1/live/test" + QString::number(id);
+        muxMap["push"]->setData(path);
+    }
+
+
     muxMap["hls"]=Link::create("Mux");
     path["path"]="/tmp/hls/stream" + QString::number(id)+".m3u8";
     muxMap["hls"]->setData(path);
@@ -62,9 +71,13 @@ void Channel::init()
     path["path"]="mem://stream" + QString::number(id);
     muxMap["ts"]->setData(path);
 
+    muxMap["rtsp"]=Link::create("Mux");
+    path["format"]="rtsp";
+    path["path"]="mem://stream" + QString::number(id);
+    muxMap["rtsp"]->setData(path);
+
     udp=Link::create("TSUdp");
     muxMap["ts"]->linkV(udp);
-    muxMap["push"]=Link::create("Mux");
 
 
     foreach(QString key,muxMap.keys())
@@ -99,10 +112,31 @@ void Channel::updateConfig(QVariantMap cfg)
         muxMap["hls"]->stop();
 
 
-    if(stream["http"].toBool() || stream["rtsp"].toBool() || stream["udp"].toMap()["enable"].toBool())
+    if(stream["http"].toBool()  || stream["udp"].toMap()["enable"].toBool())
         muxMap["ts"]->start();
     else
         muxMap["ts"]->stop();
+
+    if(stream["rtsp"].toBool() && enable)
+    {
+        muxMap["rtsp"]->start();
+        if(onvifProc.state()==QProcess::NotRunning)
+        {
+            QString ip=Json::loadFile("/link/config/net.json").toMap()["ip"].toString();
+            onvifProc.setWorkingDirectory("/link/bin/onvif");
+            QString cmd="/link/bin/onvif/onvif_srvd --no_fork --pid_file /tmp/onvif"+QString::number(id)+".pid --ifs eth0 --scope onvif://www.onvif.org/name/LinkPi --scope onvif://www.onvif.org/Profile/S --port "+QString::number(6000+id);
+            cmd+= " --name RTSP --width 1920 --height 1080 --url rtsp://"+ip+"/stream"+QString::number(id)+" --type H264";
+            qDebug()<<cmd;
+            onvifProc.start(cmd);
+        }
+    }
+    else
+    {
+        if(onvifProc.state()!=QProcess::NotRunning)
+            onvifProc.kill();
+        muxMap["rtsp"]->stop();
+    }
+
 
     if(stream["http"].toBool())
         muxMap["ts"]->linkV(httpServer);
@@ -110,9 +144,15 @@ void Channel::updateConfig(QVariantMap cfg)
         muxMap["ts"]->unLinkV(httpServer);
 
     if(stream["rtsp"].toBool())
-        muxMap["ts"]->linkV(rtspServer);
+    {
+        muxMap["rtsp"]->linkV(rtspServer);
+        muxMap["rtsp"]->linkA(rtspServer);
+    }
     else
-        muxMap["ts"]->unLinkV(rtspServer);
+    {
+        muxMap["rtsp"]->unLinkV(rtspServer);
+        muxMap["rtsp"]->unLinkA(rtspServer);
+    }
 
 
 

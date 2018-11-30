@@ -4,6 +4,7 @@
 #include <QObject>
 #include "Link.h"
 #include <QMap>
+#include <QProcess>
 
 class Channel : public QObject
 {
@@ -30,6 +31,7 @@ protected:
     LinkObject *encVsub;
     LinkObject *overlay;
     LinkObject *snap;
+    QProcess onvifProc;
 
 private:
 

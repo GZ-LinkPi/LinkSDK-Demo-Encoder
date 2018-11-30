@@ -11,6 +11,9 @@ public:
     explicit ChannelVI(QObject *parent = 0);
     virtual void init();
     virtual void updateConfig(QVariantMap cfg);
+    static LinkObject *audioMini;
+    static LinkObject *audioMiniOut;
+    bool isSrcLine;
 signals:
 
 public slots:

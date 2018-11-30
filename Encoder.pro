@@ -4,8 +4,8 @@ QT -= gui
 TARGET = Encoder
 CONFIG += console
 CONFIG -= app_bundle
-chip = HI3531A
-include(/home/zc/LinkLib/Link.pri)
+chip = HI3531D
+include(../../LinkLib/Link.pri)
 include(../libmaia-master/maia.pri)
 
 TEMPLATE = app
@@ -32,6 +32,5 @@ HEADERS += \
     GroupRPC.h \
     ChannelMix.h \
     ChannelUSB.h \
-    ChannelFile.h \
-    Version.h
+    ChannelFile.h
 
